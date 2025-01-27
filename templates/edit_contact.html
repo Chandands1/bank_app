@@ -1,0 +1,60 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Edit Contact</h2>
+<form method="POST">
+  <label for="location">Location:</label>
+  <input
+    type="text"
+    id="location"
+    name="location"
+    value="{{ contact.location }}"
+    required
+  /><br />
+
+  <label for="contact_name">Contact Name:</label>
+  <input
+    type="text"
+    id="contact_name"
+    name="contact_name"
+    value="{{ contact.contact_name }}"
+    required
+  /><br />
+
+  <label for="contact_designation">Designation:</label>
+  <input
+    type="text"
+    id="contact_designation"
+    name="contact_designation"
+    value="{{ contact.contact_designation }}"
+    required
+  /><br />
+
+  <label for="contact_email">Email:</label>
+  <input
+    type="email"
+    id="contact_email"
+    name="contact_email"
+    value="{{ contact.contact_email }}"
+    required
+  /><br />
+
+  <label for="email_threshold">Email Size Threshold:</label>
+  <input
+    type="number"
+    id="email_threshold"
+    name="email_threshold"
+    value="{{ contact.email_size_threshold }}"
+    required
+  /><br />
+
+  <label for="jurisdiction">Jurisdiction:</label>
+  <input
+    type="text"
+    id="jurisdiction"
+    name="jurisdiction"
+    value="{{ contact.contact_jurisdiction }}"
+    required
+  /><br />
+
+  <button type="submit">Update Contact</button>
+</form>
+{% endblock %}

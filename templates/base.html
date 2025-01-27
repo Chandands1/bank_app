@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <title>Bank Application</title>
+  </head>
+  <body>
+    <header>
+      <h1>Bank Management Application</h1>
+      <nav>
+        <a href="/add-bank-master">Add Bank Master</a>
+        <a href="/add-bank-contact">Add Bank Contact</a>
+        <a href="/view-data">View Data</a>
+      </nav>
+    </header>
+
+    <!-- Optional: Display success or error messages -->
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul class="messages">
+      {% for message in messages %}
+      <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+
+    <main>{% block content %} {% endblock %}</main>
+  </body>
+</html>

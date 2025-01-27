@@ -1,0 +1,24 @@
+<h3>Banks</h3>
+<ul>
+  {% for bank in banks %}
+  <li>
+    {{ bank.bank_name }} - {{ bank.location }} (Last modified: {{
+    bank.modified_on }})
+    <a href="{{ url_for('edit_bank_master', bank_id=bank.bank_slno) }}">Edit</a>
+  </li>
+  {% endfor %}
+</ul>
+
+<h3>Contacts</h3>
+<ul>
+  {% for contact in contacts %}
+  <li>
+    {{ contact.contact_name }} ({{ contact.contact_email }}) - (Last modified:
+    {{ contact.modified_on }})
+    <a
+      href="{{ url_for('edit_bank_contact', contact_id=contact.contact_slno) }}"
+      >Edit</a
+    >
+  </li>
+  {% endfor %}
+</ul>

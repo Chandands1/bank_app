@@ -1,21 +1,27 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <h2>Add Bank Contact</h2>
 <form method="POST">
-    <label>Location:</label>
-    <input type="text" name="location" required>
-    <label>Contact Name:</label>
-    <input type="text" name="contact_name" required>
-    <label>Designation:</label>
-    <input type="text" name="contact_designation" required>
-    <label>Email ID:</label>
-    <input type="email" name="contact_email" required>
-    <label>Email Size Threshold:</label>
-    <input type="number" name="email_threshold" required>
-    <label>Jurisdiction:</label>
-    <input type="text" name="jurisdiction" required>
-    <label>Bank ID:</label>
-    <input type="number" name="bank_id" required>
-    <button type="submit">Submit</button>
+  <label>Location:</label>
+  <input type="text" name="location" required />
+  <label>Contact Name:</label>
+  <input type="text" name="contact_name" required />
+  <label>Designation:</label>
+  <input type="text" name="contact_designation" required />
+  <label>Email ID:</label>
+  <input type="email" name="contact_email" required />
+  <label>Email Size Threshold:</label>
+  <input type="number" name="email_threshold" required />
+  <label>Jurisdiction:</label>
+  <input type="text" name="jurisdiction" required />
+  <label>Bank:</label>
+  <select name="bank_id" required>
+    <option value="">Select a Bank</option>
+    {% for bank in banks %}
+    <option value="{{ bank.bank_slno }}">
+      {{ bank.bank_name }} (ID: {{ bank.bank_slno }})
+    </option>
+    {% endfor %}
+  </select>
+  <button type="submit">Submit</button>
 </form>
 {% endblock %}

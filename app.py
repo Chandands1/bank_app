@@ -7,10 +7,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///bank.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
-# Use the correct Flask lifecycle hook
+# Create tables before handling requests
 @app.before_request
 def create_tables():
-    # Ensures tables are created before handling any requests
     with app.app_context():
         db.create_all()
 
@@ -32,6 +31,7 @@ def add_bank_master():
 
 @app.route('/add-bank-contact', methods=['GET', 'POST'])
 def add_bank_contact():
+    banks = BankMaster.query.all()  # Fetch all banks for dropdown
     if request.method == 'POST':
         location = request.form['location']
         contact_name = request.form['contact_name']
@@ -40,14 +40,19 @@ def add_bank_contact():
         email_threshold = request.form['email_threshold']
         jurisdiction = request.form['jurisdiction']
         bank_id = request.form['bank_id']
-        new_contact = BankContactDetails(location=location, contact_name=contact_name,
-                                         contact_designation=contact_designation, contact_email=contact_email,
-                                         email_size_threshold=email_threshold, contact_jurisdiction=jurisdiction,
-                                         contact_bank_slno=bank_id)
+        new_contact = BankContactDetails(
+            location=location,
+            contact_name=contact_name,
+            contact_designation=contact_designation,
+            contact_email=contact_email,
+            email_size_threshold=email_threshold,
+            contact_jurisdiction=jurisdiction,
+            contact_bank_slno=bank_id
+        )
         db.session.add(new_contact)
         db.session.commit()
         return redirect(url_for('view_data'))
-    return render_template('bank_contact.html')
+    return render_template('bank_contact.html', banks=banks)
 
 @app.route('/view-data')
 def view_data():
@@ -57,13 +62,13 @@ def view_data():
 
 @app.route('/edit-bank-master/<int:bank_id>', methods=['GET', 'POST'])
 def edit_bank_master(bank_id):
-    bank = BankMaster.query.get(bank_id)  # Fetch the bank data by ID
+    bank = BankMaster.query.get(bank_id)
 
     if request.method == 'POST':
         bank.bank_name = request.form['bank_name']
         bank.bank_short_name = request.form['bank_short_name']
         bank.location = request.form['location']
-        bank.modified_on = datetime.utcnow()  # Update the modified date
+        bank.modified_on = datetime.utcnow()
         db.session.commit()
         return redirect(url_for('view_data'))
 
@@ -71,7 +76,8 @@ def edit_bank_master(bank_id):
 
 @app.route('/edit-bank-contact/<int:contact_id>', methods=['GET', 'POST'])
 def edit_bank_contact(contact_id):
-    contact = BankContactDetails.query.get(contact_id)  # Fetch the contact data by ID
+    contact = BankContactDetails.query.get(contact_id)
+    banks = BankMaster.query.all()  # Fetch banks for dropdown
 
     if request.method == 'POST':
         contact.location = request.form['location']
@@ -80,11 +86,12 @@ def edit_bank_contact(contact_id):
         contact.contact_email = request.form['contact_email']
         contact.email_size_threshold = request.form['email_threshold']
         contact.contact_jurisdiction = request.form['jurisdiction']
-        contact.modified_on = datetime.utcnow()  # Update the modified date
+        contact.contact_bank_slno = request.form['bank_id']
+        contact.modified_on = datetime.utcnow()
         db.session.commit()
         return redirect(url_for('view_data'))
 
-    return render_template('edit_contact.html', contact=contact)
+    return render_template('edit_contact.html', contact=contact, banks=banks)
 
 if __name__ == '__main__':
     app.run(debug=True)

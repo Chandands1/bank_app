@@ -1,27 +1,78 @@
 {% extends 'base.html' %} {% block content %}
 <h2>Add Bank Contact</h2>
-<form method="POST">
-  <label>Location:</label>
-  <input type="text" name="location" required />
-  <label>Contact Name:</label>
-  <input type="text" name="contact_name" required />
-  <label>Designation:</label>
-  <input type="text" name="contact_designation" required />
-  <label>Email ID:</label>
-  <input type="email" name="contact_email" required />
-  <label>Email Size Threshold:</label>
-  <input type="number" name="email_threshold" required />
-  <label>Jurisdiction:</label>
-  <input type="text" name="jurisdiction" required />
-  <label>Bank:</label>
-  <select name="bank_id" required>
-    <option value="">Select a Bank</option>
-    {% for bank in banks %}
-    <option value="{{ bank.bank_slno }}">
-      {{ bank.bank_name }} (ID: {{ bank.bank_slno }})
-    </option>
-    {% endfor %}
-  </select>
+<form method="POST" id="bankContactForm">
+  <table border="1" id="contactTable">
+    <thead>
+      <tr>
+        <th>Bank</th>
+        <th>Location</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <select name="bank_id[]" required>
+            <option value="">Select a Bank</option>
+            {% for bank in banks %}
+            <option value="{{ bank.bank_slno }}">
+              {{ bank.bank_name }} (ID: {{ bank.bank_slno }})
+            </option>
+            {% endfor %}
+          </select>
+        </td>
+        <td><input type="text" name="location[]" required /></td>
+      </tr>
+      <tr>
+        <th>Contact Name</th>
+        <th>Designation</th>
+        <th>Ph No</th>
+        <th>Email ID</th>
+        <th>Email Threshold</th>
+        <th>Jurisdiction</th>
+        <th>Action</th>
+      </tr>
+      <tr class="contactRow">
+        <td><input type="text" name="contact_name[]" required /></td>
+        <td><input type="text" name="designation[]" required /></td>
+        <td><input type="text" name="contact_ph[]" required /></td>
+        <td><input type="email" name="contact_email[]" required /></td>
+        <td><input type="number" name="email_threshold[]" required /></td>
+        <td><input type="text" name="jurisdiction[]" required /></td>
+        <td>
+          <button type="button" class="addRow">+</button>
+          <button type="button" class="removeRow">-</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
   <button type="submit">Submit</button>
 </form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    document
+      .getElementById("contactTable")
+      .addEventListener("click", function (event) {
+        if (event.target.classList.contains("addRow")) {
+          let table = document
+            .getElementById("contactTable")
+            .getElementsByTagName("tbody")[0];
+          let newRow = document.querySelector(".contactRow").cloneNode(true);
+
+          // Clear input fields in the cloned row
+          newRow
+            .querySelectorAll("input")
+            .forEach((input) => (input.value = ""));
+
+          table.appendChild(newRow);
+        }
+        if (event.target.classList.contains("removeRow")) {
+          let row = event.target.closest("tr");
+          if (document.querySelectorAll(".contactRow").length > 1) {
+            row.remove();
+          }
+        }
+      });
+  });
+</script>
 {% endblock %}
